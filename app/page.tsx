@@ -6,7 +6,7 @@ import Live from "@/components/Live";
 export default function Page() {
   return (
     <Room>
-      <div>
+      <div className="bg-gray-500">
         <Live />
       </div>
     </Room>
