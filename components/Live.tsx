@@ -136,7 +136,7 @@ const Live = () => {
             onPointerLeave={handlePointerLeave}
             onPointerDown={handlePointerDown}
             onPointerUp={handlePointerUp}
-            className=" border-2 border-green-500 h-[100vh] w-full flex justify-center items-center text-center"
+            className=" border-2 border-gray-800 h-[100vh] w-full flex justify-center items-center text-center"
         >
             <h1 className="tet-2xl text-white">Live Blocks Figma Clone</h1>
 
