@@ -6,8 +6,13 @@ import { CursorMode, Reaction, ReactionEvent } from "@/types/type";
 import ReactionSelector from "./reaction/ReactionButton";
 import FlyingReaction from "./reaction/FlyingReaction";
 import useInterval from "@/hooks/useInterval";
+import { Props } from "next/script";
 
-const Live = () => {
+type Props = {
+    canvasRef : React.MutableRefObject<HTMLCanvasElement | null>;
+}
+
+const Live = ({canvasRef}: Props) => {
     const others = useOthers();
     const [{ cursor }, updateMyPresence] = useMyPresence() as any;
 
@@ -18,16 +23,16 @@ const Live = () => {
 
     const broadcast = useBroadcastEvent();
 
-    useInterval(()=>{
-        setReaction((reactions) =>reactions.filter((r)=>{
+    useInterval(() => {
+        setReaction((reactions) => reactions.filter((r) => {
             r.timestamp > Date.now() - 4000
         }))
     }, 1000)
 
-    useInterval(()=>{
-        if(cursorState.mode === CursorMode.Reaction && cursorState.isPressed && cursor){
+    useInterval(() => {
+        if (cursorState.mode === CursorMode.Reaction && cursorState.isPressed && cursor) {
             setReaction((reactions) => reactions.concat([{
-                point : {x: cursor.x , y:cursor.y},
+                point: { x: cursor.x, y: cursor.y },
                 value: cursorState.reaction,
                 timestamp: Date.now()
             }]))
@@ -35,16 +40,16 @@ const Live = () => {
             broadcast({
                 x: cursor.x,
                 y: cursor.y,
-                value : cursorState.reaction
+                value: cursorState.reaction
             })
         }
-    } , 100);
+    }, 100);
 
     useEventListener((eventData) => {
         const event = eventData.event as ReactionEvent;
 
         setReaction((reactions) => reactions.concat([{
-            point : {x: event.x , y:event.y},
+            point: { x: event.x, y: event.y },
             value: event.value,
             timestamp: Date.now()
         }]))
@@ -132,13 +137,14 @@ const Live = () => {
 
     return (
         <div
+            id = "canvas"
             onPointerMove={handlePointerMove}
             onPointerLeave={handlePointerLeave}
             onPointerDown={handlePointerDown}
             onPointerUp={handlePointerUp}
             className=" border-2 border-gray-800 h-[100vh] w-full flex justify-center items-center text-center"
         >
-            <canvas />
+            <canvas ref = {canvasRef}/>
 
             {reactions.map((r) => (
                 <FlyingReaction

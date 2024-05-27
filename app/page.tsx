@@ -8,14 +8,14 @@ import LeftSidebar from "@/components/LeftSidebar";
 import RightSidebar from "@/components/RightSidebar";
 import { useEffect, useRef } from "react";
 import { CustomFabricObject } from "@/types/type";
-import { handleCanvasMouseDown, initializeFabric } from "@/lib/canvas";
+import { handleCanvasMouseDown, handleResize, initializeFabric } from "@/lib/canvas";
 
 export default function Page() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fabricRef = useRef<fabric.Canvas| null>(null);
   const isDrawing = useRef(false);
   const shapeRef = useRef<fabric.Object | null>(null);
-  const selectedShapeRef = useRef<string | null>(null)
+  const selectedShapeRef = useRef<string | null>('rectangle')
 
   useEffect(()=>{
     const canvas = initializeFabric({canvasRef , fabricRef})
@@ -29,6 +29,10 @@ export default function Page() {
         selectedShapeRef
       })
     })
+
+    window.addEventListener("resize" , ()=>{
+      handleResize({ fabricRef })
+    })
   },[])
   return (
     <Room>
@@ -37,7 +41,7 @@ export default function Page() {
 
         <section className="flex h-full flex-row bg-gray-800">
           <LeftSidebar />
-          <Live />
+          <Live canvasRef ={canvasRef}/>
           <RightSidebar />
         </section>
       </main>
